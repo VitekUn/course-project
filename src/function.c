@@ -1,5 +1,5 @@
 #include "function.h"
-#include "string.h"
+
 
 int count_string(FILE * input) 
 {
@@ -62,6 +62,10 @@ int rabinKarpSearch(char* text, char* str, int num_str) {
         int textLen = slen(text);
         int h = 0;
  
+ 		if(schr(str, '*') != -1) {
+ 			int middle = schr(str, '*');
+ 			return -1;
+ 		}
         //Хэш подстроки для поиска
         int strHash = ringHash(str, strLen, 0, &h);
         //Хэш первого окна в тексте

@@ -1,5 +1,4 @@
 #include "function.h"
-#include "string.h"
 
 int main(int argc, char * argv[])
 {
@@ -27,8 +26,13 @@ int main(int argc, char * argv[])
         fscanf(text_in, "%s",text[i]);
         //printf("%s\n", text[i]);
     }
+    //Обрезка кавычек
+    char str[50];
+    scopy(argv[1], str);
+    printf("pattern = %s\n", str);
+
     for(int j = 0; j < num_str; j++) {
-        rabinKarpSearch(text[j], argv[1], j+1);
+        rabinKarpSearch(text[j], str, j+1);
     }
     
     return 0;
