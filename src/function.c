@@ -57,16 +57,19 @@ int ringHash(char* str, int strLen, int prevHash, int *h) {
     }
 }
 
-int rabinKarpSearch(char* text, char* str, int num_str) {
+int rabinKarpSearch(char* text, char* str, int num_str)
+{
         int strLen = slen(str);
         int textLen = slen(text);
         int h = 0;
- 
+ 		//шаблонный
  		if(schr(str, '*') != -1) {
- 			int middle = schr(str, '*');
+ 			int part = schr(str, '*');
+ 			char *ptr[10];
+ 			s_stok(str, '*', ptr);
  			return -1;
- 		}
-        //Хэш подстроки для поиска
+ 		} else {
+        //Хэш подстроки для поиска без шаблонный
         int strHash = ringHash(str, strLen, 0, &h);
         //Хэш первого окна в тексте
         int textHash = ringHash(text, strLen, 0, &h);
@@ -89,6 +92,7 @@ int rabinKarpSearch(char* text, char* str, int num_str) {
         //Строка не найдена
         printf("%d)Строка не найдена\n", num_str);
         return -1;
+    }
 }
 
 // unsigned int hash(char *key, int num_str)

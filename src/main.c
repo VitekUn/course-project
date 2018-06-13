@@ -26,7 +26,7 @@ int main(int argc, char * argv[])
         fscanf(text_in, "%s",text[i]);
         //printf("%s\n", text[i]);
     }
-    //Обрезка кавычек
+    
     char str[50];
     scopy(argv[1], str);
     printf("pattern = %s\n", str);
@@ -34,6 +34,6 @@ int main(int argc, char * argv[])
     for(int j = 0; j < num_str; j++) {
         rabinKarpSearch(text[j], str, j+1);
     }
-    
+
     return 0;
 }
