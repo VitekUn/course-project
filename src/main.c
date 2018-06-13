@@ -1,4 +1,5 @@
 #include "function.h"
+#include "string.h"
 
 int main(int argc, char * argv[])
 {
@@ -20,19 +21,13 @@ int main(int argc, char * argv[])
     }
     int num_str = count_string(text_in);
     text_in = fopen(argv[2], "r");
-    //printf("Количество строк = %d\n", num_str);
     char text[num_str][50];
     for (int i = 0; i < num_str; i++) {
         fscanf(text_in, "%s",text[i]);
         //printf("%s\n", text[i]);
     }
-
-    char str[50];
-    scopy(argv[1], str);
-    printf("pattern = %s\n", str);
-
     for(int j = 0; j < num_str; j++) {
-        rabinKarpSearch(text[j], str, j+1);
+        rabinKarpSearch(text[j], argv[1], j+1);
     }
 
     return 0;
