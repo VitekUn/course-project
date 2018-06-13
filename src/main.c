@@ -32,7 +32,7 @@ int main(int argc, char * argv[])
     printf("pattern = %s\n", str);
 
     for(int j = 0; j < num_str; j++) {
-        rabinKarpSearch(text[0], str, j+1);
+        rabinKarpSearch(text[j], str, j+1);
     }
 
     return 0;
