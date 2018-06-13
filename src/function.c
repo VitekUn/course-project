@@ -14,62 +14,30 @@ int count_string(FILE * input)
 	return lines_count+1;
 
 }
-int h_init(int strLen) {
-    int d = 52;
-    int p = 65713;
  
-    int h = 1;
-    for(int i=1; i < strLen; i++) {
-        h = (h*d) % p;
+unsigned int hash(char *key)
+{
+    unsigned int h = 0;
+    char *p;
+    for(p = key; *p !='\0'; p++){
+    h = h*33 + (unsigned int)*p + 11;
     }
- 
-    return h;
+    return h % 73;
 }
- 
-int ringHash(char* str, int strLen, int prevHash, int *h) {
-    int d = 52; //Константа из формулы
-    int p = 65713; //Вычисления производятся по модулю простого числа
- 
-    //h = d^(len-1) (mod p) - константа для быстроого пересчета хэша
-    if(*h == 0) { //Если константа не инициализирована
-        *h = h_init(strLen);
-    }
- 
-    //Если считаем хеш первый раз
-    if(prevHash == 0) {
-        for(int i=0; i<strLen; i++) {
-            prevHash += (d*prevHash + (int)str[i]) % p;
-        }
-        if(prevHash < 0) {
-            prevHash += p;
-        }
- 
-        return prevHash;
-    }
-    //Если пересчитываем для другого окна
-    else {
-        int hash = (d * (prevHash - (int)str[0] * (*h)) + (int)str[strLen]) % p;
-        if(hash < 0) {
-            hash += p;
-        }
- 
-        return hash;
-    }
-}
+
 int rabinKarpSearch(char* text, char* str, int num_str)
 {
-    int strLen = slen(str);
-    int textLen = slen(text);
-    int s;
-    int h = 0;
     //шаблонный
     if(schr(str, '*') >= 0) {
+        int s;
         char *ptr1[10];
         char pattern[10];
         scopy(str, pattern);
         int n_pattern = s_stok(pattern, '*', ptr1);
         char *ptr2[10];
         int n_slov = s_stok(text, ' ', ptr2); 
+        // int strLen = slen(str);
+        // int textLen = slen(text);
          for(int i = 0; i < n_slov; i++) {
             s = 0;
             for(int j = 0; j < n_pattern; j++) {
@@ -92,57 +60,52 @@ int rabinKarpSearch(char* text, char* str, int num_str)
         }
     }
     //Хэш подстроки для поиска без шаблонный
-    if(schr(str, '*') == -1){
-    
-    int strHash = ringHash(str, strLen, 0, &h);
-    //Хэш первого окна в тексте
-    int textHash = ringHash(text, strLen, 0, &h);
- 
-    for(int k = 0; k <= (textLen-strLen); k++) {
-        if(strHash == textHash) {
-            //Если хэши совпали, проверяем посимвольно
-            for(int i = 0; (i < strLen) && (str[i] == text[k+i]); i++) {
-                if(i == (strLen-1)) {
-                    printf("%d)Было найдено слово по шаблону(%s) - индекс = %d\n", num_str, str, k);
-                    return k;
-                }
+    if(schr(str, '*') == -1) {
+        char copied_text[50];
+        scopy(text, copied_text);
+        char *ptr[10];
+        int n_slov = s_stok(copied_text, ' ', ptr); 
+        for(int i = 0; i < n_slov; i++) { 
+            int strHash = hash(str);
+            int textHash = hash(ptr[i]);
+            //printf("strHash = %d\ntextHash = %d\n", strHash, textHash);
+            if(strHash == textHash) {
+                int position = s_str(text, ptr[i]);
+                printf("%d)Было найдено слово по шаблону(%s) - индекс = %d\n", num_str, str, position);    
+            } else {
+                printf("%d)Строка не найдена\n", num_str);
             }
         }
-        //Хэш следующего окна
-        textHash = ringHash(&text[k], strLen, textHash, &h);
     }
-    }
-    //Строка не найдена
-    printf("%d)Строка не найдена\n", num_str);
-    return -1;
+    return 0;
 }
 
 // int rabinKarpSearch(char* text, char* str, int num_str) {
-//         int strLen = slen(str);
-//         int textLen = slen(text);
-//         int h = 0;
+//     int strLen = slen(str);
+//     int textLen = slen(text);
+//     int h = 0;
  
-//         //Хэш подстроки для поиска
-//         int strHash = ringHash(str, strLen, 0, &h);
-//         //Хэш первого окна в тексте
-//         int textHash = ringHash(text, strLen, 0, &h);
+//     //Хэш подстроки для поиска
+//     int strHash = ringHash(str, strLen, 0, &h);
+//     //Хэш первого окна в тексте
+//     int textHash = ringHash(text, strLen, 0, &h);
  
-//         for(int k = 0; k <= (textLen-strLen); k++) {
-//             if(strHash == textHash) {
-//                 //Если хэши совпали, проверяем посимвольно
-//                 for(int i = 0; (i < strLen) && (str[i] == text[k+i]); i++) {
-//                     if(i == (strLen-1)) {
-//                         printf("%d)Было найдено слово по шаблону(%s) - индекс = %d\n", num_str, str, k);
-//                         return k;
-//                     }
+//     for(int k = 0; k <= (textLen-strLen); k++) {
+//         if(strHash == textHash) {
+//             //Если хэши совпали, проверяем посимвольно
+//             for(int i = 0; (i < strLen) && (str[i] == text[k+i]); i++) {
+//                 if(i == (strLen-1)) {
+//                     printf("%d)Было найдено слово по шаблону(%s) - индекс = %d\n", num_str, str, k);
+//                     return k;
 //                 }
 //             }
- 
-//             //Хэш следующего окна
-//             textHash = ringHash(&text[k], strLen, textHash, &h);
 //         }
  
-//         //Строка не найдена
-//         printf("%d)Строка не найдена\n", num_str);
-//         return -1;
+//         //Хэш следующего окна
+//         textHash = ringHash(&text[k], strLen, textHash, &h);
+//     }
+ 
+//     //Строка не найдена
+//     printf("%d)Строка не найдена\n", num_str);
+//     return -1;
 // }
