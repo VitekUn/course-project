@@ -14,16 +14,6 @@ int count_string(FILE * input)
 	return lines_count+1;
 
 }
-
-// unsigned int hash(char *key, int num_str)
-// {
-//     unsigned int h = 0;
-// 	char *p;
-// 	for(p = key; *p !='\0'; p++){
-// 		h = h*33 + (unsigned int)*p + 11;
-// 	}
-// 	return h % num_str;
-// }
 int h_init(int strLen) {
     int d = 52;
     int p = 65713;
@@ -67,7 +57,7 @@ int ringHash(char* str, int strLen, int prevHash, int *h) {
     }
 }
 
-int rabinKarpSearch(char* text, char* str) {
+int rabinKarpSearch(char* text, char* str, int num_str) {
         int strLen = slen(str);
         int textLen = slen(text);
         int h = 0;
@@ -82,6 +72,7 @@ int rabinKarpSearch(char* text, char* str) {
                 //Если хэши совпали, проверяем посимвольно
                 for(int i = 0; (i < strLen) && (str[i] == text[k+i]); i++) {
                     if(i == (strLen-1)) {
+                    	printf("%d)Было найдено слово по шаблону(%s)\nЕго индекс = %d\n", num_str, str, k);
                         return k;
                     }
                 }
@@ -92,5 +83,16 @@ int rabinKarpSearch(char* text, char* str) {
         }
  
         //Строка не найдена
+        printf("%d)Строка не найдена\n", num_str);
         return -1;
 }
+
+// unsigned int hash(char *key, int num_str)
+// {
+//     unsigned int h = 0;
+// 	char *p;
+// 	for(p = key; *p !='\0'; p++){
+// 		h = h*33 + (unsigned int)*p + 11;
+// 	}
+// 	return h % num_str;
+// }

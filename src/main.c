@@ -28,7 +28,7 @@ int main(int argc, char * argv[])
         //printf("%s\n", text[i]);
     }
     for(int j = 0; j < num_str; j++) {
-        printf("%d\n",rabinKarpSearch(text[0], argv[1]));
+        rabinKarpSearch(text[j], argv[1], j+1);
     }
     
     return 0;
